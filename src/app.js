@@ -35,16 +35,17 @@
 //     res.json(users);
 // });
 
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const app = express();
-const port = process.env.DATABASE_URL || 3000; //giving a port number to host on.
+const port = process.env.PORT || 3000 ; //giving a port number to host on.
 
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb://localhost:27017/users', { useNewUrlParser: true })
+mongoose.connect( "mongodb://127.0.0.1:27017/users" , { useNewUrlParser: true })
   .then(() => {
     console.log('Connected to database');
   })
@@ -64,7 +65,7 @@ const userSchema = new mongoose.Schema({
   verified: {
     type: Boolean,
     required: true
-  }
+  }  
 });
 
 const User = mongoose.model('User', userSchema);
@@ -91,8 +92,8 @@ app.get('/users', async (req, res) => {
   res.json(users);
 });
 
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
+app.listen(3000, () => {
+  console.log(`Server started on port 3000`);
 });
 
   
