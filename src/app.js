@@ -37,13 +37,12 @@
 
 
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const app = express();
 const port = process.env.PORT || 3000 ; //giving a port number to host on.
 
-app.use(bodyParser.json());
+app.use(express.json());
 
 mongoose.connect( "mongodb://127.0.0.1:27017/users" , { useNewUrlParser: true })
   .then(() => {
@@ -56,7 +55,7 @@ mongoose.connect( "mongodb://127.0.0.1:27017/users" , { useNewUrlParser: true })
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    minlengt: 3
   },
   location: {
     type: String,
@@ -91,6 +90,18 @@ app.get('/users', async (req, res) => {
 
   res.json(users);
 });
+
+// app.post("/users", async (req,res) => {
+//   try{
+//     const users = new User(req.body)
+//     await users.save()
+//     res.status(200).json(users)
+//   }catch(error){
+//     console.log(error.message);
+//     res.status(500).json({message: error.message})
+//   }
+// });
+
 
 app.listen(3000, () => {
   console.log(`Server started on port 3000`);
