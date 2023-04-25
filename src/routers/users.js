@@ -1,23 +1,20 @@
-const mongoose = required("mongoose");
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-    name:{
-        type: String,
-        required: true
+    name: {
+      type: String,
+      minlengt: 3
     },
-
     location: {
-        type: String,
-        required: true
-        
+      type: String,
+      required: true
     },
     verified: {
-        type: Boolean,
-        required: true
-    }
-});
-
-//we are creating a new collection
-const User = mongoose.model('User', userSchema);
+      type: Boolean,
+      required: true
+    }  
+  });
+  
+  const User = mongoose.model('User', userSchema);
 
 module.exports = User;
