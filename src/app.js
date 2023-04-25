@@ -10,16 +10,40 @@ app.use(express.json());
 app.get('/users', async (req, res) => {
   
   try{
-    const { locations } = req.query;
-    const { verified }  = req.query
+  //   const { locations } = req.query;
+  //   const { verified }  = req.query
 
-  if (!locations) {
-    return res.status(400).send('Please provide at least one location.');
+  // if (!locations) {
+  //   return res.status(400).send('Please provide at least one location.');
+  // }
+
+  //  const users = await User.find({ location :  { $in: locations.split(',') }, verified: true})
+  //  console.log(users)
+  // res.send(users);
+
+  const { searchString, locations, verified } = req.query;
+
+  let query = { status: 'verified' };
+
+  if (locations) {
+    query.location = { $in: locations.split(',') };
   }
 
-   const users = await User.find({ location :  { $in: locations.split(',') }, verified: true})
-   console.log(users)
+  if (searchString) {
+    const searchRegex = new RegExp(searchString, 'i');
+    query.$or = [{ name: searchRegex }, { location: searchRegex }];
+  }
+
+  if (verified === 'true') {
+    query.status = 'verified';
+  } else if (verified === 'false') {
+    query.status = 'unverified';
+  }
+
+  const users = await User.find(query);
+
   res.send(users);
+
   }
    catch(error) {
     console.error(error);
@@ -27,19 +51,6 @@ app.get('/users', async (req, res) => {
     }
   
 });
-
-app.get('/search', async (req, res) => {
-  const { q } = req.query;
-
-  if (!q) {
-    return res.status(400).send('Please provide a search query.');
-  }
-
-  const users = await User.find({ $or: [{ name: new RegExp(q, 'i') }, { location: new RegExp(q, 'i') }] });
-
-  res.send(users);
-});
-
 
 app.post("/users", async (req,res) => {
   try{
